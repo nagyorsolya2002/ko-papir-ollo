@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<title>Kő – Papír – Olló</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: linear-gradient(135deg, #2c003e, #6a0dad, #a4508b);
+        color: white;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 40px;
+        text-shadow: 0 0 10px #ff00ff;
+    }
+
+    /* Gombok és a felettük lévő képek konténere */
+    .choices {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .choice-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .choice-img {
+        width: 100px; /* Itt állítsd be a gombok feletti képek méretét */
+        height: 100px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+
+    .choices button {
+        padding: 15px 30px;
+        font-size: 20px;
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        background: rgba(255,255,255,0.1);
+        color: white;
+        backdrop-filter: blur(5px);
+        transition: 0.3s;
+        box-shadow: 0 0 10px rgba(255,0,255,0.5);
+    }
+
+    .choices button:hover {
+        transform: scale(1.1);
+        background: #ff00ff;
+    }
+
+    /* Eredmény kép stílusa */
+    #status-image {
+        margin-top: 20px;
+        max-width: 200px;
+        border-radius: 20px;
+        display: none; /* Alapból rejtve van */
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    .result {
+        margin-top: 20px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .score {
+        margin-top: 20px;
+        font-size: 20px;
+        padding: 10px 20px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 10px;
+        display: inline-block;
+    }
+
+    .reset-btn {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background: #ff00ff;
+        color: white;
+        cursor: pointer;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Kő – Papír – Olló 🎮</h1>
+
+<div class="choices">
+    <div class="choice-item">
+        <img src="ko.jpg" alt="Kő" class="choice-img">
+        <button onclick="play('kő')">🪨 Kő</button>
+    </div>
+    <div class="choice-item">
+        <img src="papir.jpg" alt="Papír" class="choice-img">
+        <button onclick="play('papír')">📄 Papír</button>
+    </div>
+    <div class="choice-item">
+        <img src="ollo.jpg" alt="Olló" class="choice-img">
+        <button onclick="play('olló')">✂️ Olló</button>
+    </div>
+</div>
+
+<div class="result" id="result">Válassz egyet!</div>
+
+<!-- Ide kerül az eredménykép -->
+<img id="status-image" src="" alt="Eredmény kép">
+
+<div class="score">
+    Játékos: <span id="playerScore">0</span> | Gép: <span id="computerScore">0</span>
+</div>
+
+<br>
+<button class="reset-btn" onclick="resetGame()">Új játék 🔄</button>
+
+<script>
+    let playerScore = 0;
+    let computerScore = 0;
+
+    function play(playerChoice) {
+        const choices = ['kő', 'papír', 'olló'];
+        const computerChoice = choices[Math.floor(Math.random() * 3)];
+        const statusImg = document.getElementById("status-image");
+        const resultDiv = document.getElementById("result");
+
+        let resultText = `Te: ${playerChoice.toUpperCase()} | Gép: ${computerChoice.toUpperCase()}<br>`;
+        
+        statusImg.style.display = "inline-block"; // Megmutatjuk a képet
+
+        if (playerChoice === computerChoice) {
+            resultText += "Döntetlen! 🤝";
+            statusImg.src = "dontetlen.jpg"; // Saját kép döntetlenhez
+            document.body.style.background = "linear-gradient(135deg, #444, #777)";
+        } 
+        else if (
+            (playerChoice === 'kő' && computerChoice === 'olló') ||
+            (playerChoice === 'papír' && computerChoice === 'kő') ||
+            (playerChoice === 'olló' && computerChoice === 'papír')
+        ) {
+            resultText += "Nyertél! 🎉";
+            playerScore++;
+            statusImg.src = "nyertel.jpg"; // Saját kép ha nyersz
+            document.body.style.background = "linear-gradient(135deg, #1d976c, #93f9b9)";
+        } 
+        else {
+            resultText += "Vesztettél! 😢";
+            computerScore++;
+            statusImg.src = "vesztettel.jpg"; // Saját kép ha veszítesz
+            document.body.style.background = "linear-gradient(135deg, #cb2d3e, #ef473a)";
+        }
+
+        resultDiv.innerHTML = resultText;
+        document.getElementById("playerScore").innerText = playerScore;
+        document.getElementById("computerScore").innerText = computerScore;
+    }
+
+    function resetGame() {
+        playerScore = 0;
+        computerScore = 0;
+        document.getElementById("playerScore").innerText = 0;
+        document.getElementById("computerScore").innerText = 0;
+        document.getElementById("result").innerHTML = "Válassz egyet!";
+        document.getElementById("status-image").style.display = "none";
+        document.body.style.background = "linear-gradient(135deg, #2c003e, #6a0dad, #a4508b)";
+    }
+</script>
+
+</body>
+</html>
